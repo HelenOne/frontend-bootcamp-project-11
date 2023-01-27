@@ -1,8 +1,8 @@
 {
-  "name": "my-webpack-project",
+  "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "My webpack project",
-  "main": "index.js",
+  "description": "rss agregator",
+  "main": "./src/index.js",
    "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode=production --node-env=production",
@@ -28,11 +28,12 @@
     "style-loader": "^3.3.1",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^4.11.1",
+    "bootstrap": "^5.2.3"
+
   },
   "devDependencies": {
     "@popperjs/core": "^2.11.6",
-    "bootstrap": "^5.2.3",
     "lodash": "^4.17.21"
   },
   "repository": {
