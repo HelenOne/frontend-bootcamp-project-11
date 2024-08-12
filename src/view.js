@@ -1,4 +1,4 @@
-export default (elements, initState) => (path, value, previousValue) => {
+export default (elements, initState, i18next) => (path, value, previousValue) => {
   console.log('path', path)
   switch (path) {
     case 'isValid': {
@@ -6,7 +6,7 @@ export default (elements, initState) => (path, value, previousValue) => {
         elements.feedback.textContent = '';
         elements.feedback.classList.remove('text-danger');
       } else {
-        elements.feedback.textContent = 'Ссылка должна быть валидным URL';
+        elements.feedback.textContent = i18next.t('errors.validationError');
         elements.feedback.classList.add('text-danger');
       }
     }
