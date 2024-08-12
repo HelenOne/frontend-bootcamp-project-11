@@ -1,4 +1,4 @@
-export default (elements, initState, i18next) => (path, value, previousValue) => {
+export default (elements, state, i18next) => (path, value, previousValue) => {
   console.log('path', path)
   switch (path) {
     case 'isValid': {
@@ -6,7 +6,8 @@ export default (elements, initState, i18next) => (path, value, previousValue) =>
         elements.feedback.textContent = '';
         elements.feedback.classList.remove('text-danger');
       } else {
-        elements.feedback.textContent = i18next.t('errors.validationError');
+        const errorMessage = state.error;
+        elements.feedback.textContent = i18next.t(`errors.${errorMessage}`);
         elements.feedback.classList.add('text-danger');
       }
     }
