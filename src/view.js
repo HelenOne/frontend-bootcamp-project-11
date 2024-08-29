@@ -1,5 +1,4 @@
 export default (elements, state, i18next) => (path, value, previousValue) => {
-  console.log('path', path)
   switch (path) {
     case 'isValid': {
       if (value) {

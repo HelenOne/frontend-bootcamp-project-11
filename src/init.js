@@ -4,6 +4,25 @@ import onChange from 'on-change';
 import render from './view';
 import i18next from 'i18next';
 import resources from './locales/index.js';
+import axios from 'axios';
+import parser from './parser.js';
+
+const addProxy = (url) => {
+  const urlWithProxy = new URL('/get', 'https://allorigins.hexlet.app');
+  urlWithProxy.searchParams.set('url', url);
+  urlWithProxy.searchParams.set('disableCache', 'true');
+  return urlWithProxy.toString();
+}
+
+const downloadRss = (url) => {
+  const urlWithProxy = addProxy(url);
+  axios.get(urlWithProxy)
+    .then((response) => {
+      console.log('response', response.data.contents);
+      const posts = parse(response.data.contents);
+    })
+    .catch(error => console.log(error))
+}
 
 export default () => {
   const i18n = i18next.createInstance();
@@ -45,6 +64,7 @@ export default () => {
         .then(() => {
           state.isValid = true;
           state.error = '';
+          downloadRss(url)
         })
         .catch(err => {
           state.error = err.message;
