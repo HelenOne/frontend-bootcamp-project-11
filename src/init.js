@@ -46,6 +46,8 @@ export default () => {
       form: document.querySelector('.rss-form'),
       input: document.querySelector('.rss-form input'),
       feedback: document.querySelector('p.feedback'),
+      feedsContainer: document.querySelector('.feeds'),
+      postsContainer: document.querySelector('.posts'),  
     }
 
     const initState = {

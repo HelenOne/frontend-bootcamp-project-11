@@ -5,5 +5,6 @@ export default {
       parseError: 'Ресурс не содержит валидный RSS',
       required: 'Не должно быть пустым',
     },
+    feeds: 'Фиды'
   },
 };
