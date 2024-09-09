@@ -16,12 +16,11 @@ const addProxy = (url) => {
 
 const downloadRss = (url) => {
   const urlWithProxy = addProxy(url);
-  axios.get(urlWithProxy)
+  return axios.get(urlWithProxy)
     .then((response) => {
-      console.log('response', response.data.contents);
-      const posts = parse(response.data.contents);
+      const parsedData = parse(response.data.contents);
+      console.log('parsedData', parsedData);
     })
-    .catch(error => console.log(error))
 }
 
 export default () => {
@@ -64,9 +63,10 @@ export default () => {
         .then(() => {
           state.isValid = true;
           state.error = '';
-          downloadRss(url)
+          return downloadRss(url)
         })
         .catch(err => {
+          console.log('ghhh', err)
           state.error = err.message;
           state.isValid = false;
         })
