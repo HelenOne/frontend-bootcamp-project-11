@@ -5,7 +5,7 @@ import render from './view';
 import i18next from 'i18next';
 import resources from './locales/index.js';
 import axios from 'axios';
-import parser from './parser.js';
+import parse from './parser.js';
 
 const addProxy = (url) => {
   const urlWithProxy = new URL('/get', 'https://allorigins.hexlet.app');
