@@ -6,6 +6,8 @@ import i18next from 'i18next';
 import resources from './locales/index.js';
 import axios from 'axios';
 import parse from './parser.js';
+import uniqueId from 'lodash/uniqueId.js';
+
 
 const addProxy = (url) => {
   const urlWithProxy = new URL('/get', 'https://allorigins.hexlet.app');
@@ -14,12 +16,21 @@ const addProxy = (url) => {
   return urlWithProxy.toString();
 }
 
-const downloadRss = (url) => {
+const downloadRss = (url, state) => {
   const urlWithProxy = addProxy(url);
   return axios.get(urlWithProxy)
     .then((response) => {
       const parsedData = parse(response.data.contents);
-      console.log('parsedData', parsedData);
+      const feed = {
+        url,
+        id: uniqueId(),
+        title: parsedData.feedTitle,
+        description: parsedData.feedDescription,
+      }
+      state.feeds.unshift(feed);
+
+      const posts = parsedData.posts.map((post) => ({ ...post, id: uniqueId() }));
+      state.posts.unshift(...posts)
     })
 }
 
@@ -41,6 +52,8 @@ export default () => {
       url: '',
       error: '',
       isValid: true,
+      feeds: [],
+      posts: [],
     };
 
     const state = onChange(initState, render(elements, initState, i18n));
@@ -63,7 +76,7 @@ export default () => {
         .then(() => {
           state.isValid = true;
           state.error = '';
-          return downloadRss(url)
+          return downloadRss(url, state)
         })
         .catch(err => {
           console.log('ghhh', err)
