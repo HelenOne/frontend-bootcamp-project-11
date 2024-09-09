@@ -13,10 +13,10 @@ export default (rssString) => {
 
   const postElements = parsedRSS.querySelectorAll('item');
   const posts = Array.from(postElements).map((postElement) => {
-      const postTitle = postElement.querySelector('title').textContent;
-      const postDescription = postElement.querySelector('description').textContent;
-      const postLink = postElement.querySelector('link').textContent;
-      return { postTitle, postDescription, postLink };
+      const title = postElement.querySelector('title').textContent;
+      const description = postElement.querySelector('description').textContent;
+      const link = postElement.querySelector('link').textContent;
+      return { title, description, link };
   });
 
   return ({

@@ -56,8 +56,56 @@ const renderFeeds = (elements, state, i18next) => {
   feedsContainer.appendChild(feedCardBorder);
 }
 
-const renderPosts = () => {
-  
+const renderPosts = (elements, state, i18next) => {
+  console.log(state)
+  const { posts } = state;
+  const { postsContainer } = elements;
+
+  const postCardBorder = document.createElement('div');
+  postCardBorder.classList.add('card', 'border-0');
+
+  const postCardBody = document.createElement('div');
+  postCardBody.classList.add('card-body');
+
+  const postsTitle = document.createElement('h2');
+  postsTitle.classList.add('card-title', 'h4');
+  postsTitle.textContent = i18next.t('posts');
+  postCardBody.appendChild(postsTitle);
+  postCardBorder.appendChild(postCardBody);
+
+  const postsList = document.createElement('ul');
+  postsList.classList.add('list-group', 'border-0', 'rounded-0');
+
+  const postElements = posts.map(post => {
+    const li = document.createElement('li');
+    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+
+    const a = document.createElement('a');
+    a.setAttribute('href', post.link);
+    a.classList.add('fw-normal', 'link-secondary');
+    a.dataset.id = post.id;
+    a.textContent = post.title;
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+
+    li.appendChild(a);
+
+    const button = document.createElement('button');
+    button.setAttribute('type', 'button');
+    button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    button.dataset.id = post.id;
+    button.dataset.bsToggle = 'modal';
+    button.dataset.bsTarget = '#modal';
+    button.textContent = i18next.t('preview');
+
+    li.appendChild(button);
+    return li;
+  })
+
+  postsList.append(...postElements);
+  postCardBorder.appendChild(postsList);
+  postsContainer.innerHTML = '';
+  postsContainer.appendChild(postCardBorder);
 }
 
 
@@ -70,7 +118,7 @@ export default (elements, state, i18next) => (path, value, previousValue) => {
       renderFeeds(elements, state, i18next);
       break;
     case 'posts':
-      renderPosts(state);
+      renderPosts(elements, state, i18next);
       break;
     default:
       break;
