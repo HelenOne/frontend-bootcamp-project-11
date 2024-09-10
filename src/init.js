@@ -32,6 +32,12 @@ const downloadRss = (url, state) => {
       state.posts.unshift(...posts);
       state.loadingStatus = 'success'; 
     })
+    .catch(err => {
+      if (err.isAxiosError) {
+        throw new Error('networkError')
+      }
+      throw err;
+    })
 }
 
 const runPostUpdatingProcess = (state) => {
@@ -114,7 +120,6 @@ export default () => {
         .catch(err => {
           state.error = err.message;
           state.loadingStatus = 'failed'; 
-          // state.isValid = false;
         })
       }
     )
