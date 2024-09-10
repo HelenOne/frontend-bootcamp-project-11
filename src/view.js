@@ -1,3 +1,5 @@
+/* eslint-disable no-case-declarations */
+
 const renderFeedback = (elements, state, i18next) => {
   const {
     feedback, input, submit, form,
@@ -27,7 +29,6 @@ const renderFeedback = (elements, state, i18next) => {
       input.removeAttribute('readonly');
       input.classList.add('is-invalid');
       const errorMessage = state.loading.error;
-      console.log(errorMessage);
 
       feedback.textContent = i18next.t(`errors.${errorMessage}`);
       feedback.classList.add('text-danger');

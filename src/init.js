@@ -1,9 +1,12 @@
+/* eslint-disable no-param-reassign */
+
+
 import _ from 'lodash';
 import * as yup from 'yup';
 import onChange from 'on-change';
 import i18next from 'i18next';
 import axios from 'axios';
-import render from './view';
+import render from './view.js';
 import resources from './locales/index.js';
 import parse from './parser.js';
 
@@ -15,7 +18,6 @@ const addProxy = (url) => {
 };
 
 const downloadRss = (url, state) => {
-  console.log('start load rss');
   state.loading.status = 'loading';
   const urlWithProxy = addProxy(url);
   return axios.get(urlWithProxy, { timeout: 10000 })
@@ -31,7 +33,6 @@ const downloadRss = (url, state) => {
 
       const posts = parsedData.posts.map((post) => ({ ...post, id: _.uniqueId() }));
       state.posts.unshift(...posts);
-      console.log('success rss loaded');
 
       state.loading.status = 'success';
     })
