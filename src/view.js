@@ -6,6 +6,7 @@ const renderFeedback = (elements, state, i18next) => {
       submit.disabled = false;
       input.removeAttribute('readonly');
       feedback.textContent = i18next.t('loading.success');
+      input.classList.remove('is-invalid');
       feedback.classList.remove('text-danger');
       feedback.classList.add('text-success');
       input.focus();
@@ -13,6 +14,7 @@ const renderFeedback = (elements, state, i18next) => {
     case 'loading':
       submit.disabled = true;
       input.setAttribute('readonly', true);
+      input.classList.remove('is-invalid');
       feedback.classList.remove('text-success');
       feedback.classList.remove('text-danger');
       feedback.innerHTML = '';
@@ -20,8 +22,8 @@ const renderFeedback = (elements, state, i18next) => {
     case 'failed':
       submit.disabled = false;
       input.removeAttribute('readonly');
+      input.classList.add('is-invalid');
       const errorMessage = state.error;
-      // eslint-disable no-case-declarations
       feedback.textContent = i18next.t(`errors.${errorMessage}`);
       feedback.classList.add('text-danger');
       feedback.classList.remove('text-success');
