@@ -101,16 +101,23 @@ export default () => {
         url: 'validationError',
         required: 'required',
       },
+      mixed: {
+        notOneOf: 'notOneOf',
+      },
     });
 
-    const urlSchema = yup.string().url().required();
+    const validateUrl = (url) => {
+      const links = state.feeds.map((feed) => feed.url);
+      const urlSchema = yup.string().url().required().notOneOf(links);
+      return urlSchema.validate(url);
+    }
 
     elements.form.addEventListener('submit', (e) => {
       e.preventDefault();
       const data = new FormData(e.target);
       const url = data.get('url');
 
-      urlSchema.validate(url)
+      validateUrl(url)
         .then(() => {
           state.loadingStatus = 'success';
           state.error = '';
