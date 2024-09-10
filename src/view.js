@@ -1,11 +1,31 @@
 const renderFeedback = (elements, state, i18next, value) => {
-  if (value) {
-    elements.feedback.textContent = '';
-    elements.feedback.classList.remove('text-danger');
-  } else {
-    const errorMessage = state.error;
-    elements.feedback.textContent = i18next.t(`errors.${errorMessage}`);
-    elements.feedback.classList.add('text-danger');
+  const { feedback, input, submit } = elements;
+  console.log(state)
+
+  switch (state.loadingStatus) {
+    case 'success':
+      submit.disabled = false;
+      input.removeAttribute('readonly');
+      feedback.textContent = i18next.t('loading.success');
+      feedback.classList.remove('text-danger');
+      feedback.classList.add('text-success');
+      input.focus();
+      break;
+    case 'loading':
+      submit.disabled = true;
+      input.setAttribute('readonly', true);
+      feedback.classList.remove('text-success');
+      feedback.classList.remove('text-danger');
+      feedback.innerHTML = '';
+      break;
+    case 'failed':
+      submit.disabled = false;
+      input.removeAttribute('readonly');
+      const errorMessage = state.error;
+      feedback.textContent = i18next.t(`errors.${errorMessage}`);
+      feedback.classList.add('text-danger');
+      feedback.classList.remove('text-success');
+      break;
   }
 }
 
@@ -57,7 +77,6 @@ const renderFeeds = (elements, state, i18next) => {
 }
 
 const renderPosts = (elements, state, i18next) => {
-  console.log(state)
   const { posts } = state;
   const { postsContainer } = elements;
 
@@ -125,7 +144,7 @@ const renderModal = (elements, state) => {
 
 export default (elements, state, i18next) => (path, value, previousValue) => {
   switch (path) {
-    case 'isValid':
+    case 'loadingStatus':
       renderFeedback(elements, state, i18next, value);
       break;
     case 'feeds':

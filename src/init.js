@@ -15,6 +15,7 @@ const addProxy = (url) => {
 }
 
 const downloadRss = (url, state) => {
+  state.loadingStatus = 'loading'; 
   const urlWithProxy = addProxy(url);
   return axios.get(urlWithProxy)
     .then((response) => {
@@ -28,13 +29,13 @@ const downloadRss = (url, state) => {
       state.feeds.unshift(feed);
 
       const posts = parsedData.posts.map((post) => ({ ...post, id: _.uniqueId() }));
-      state.posts.unshift(...posts)
+      state.posts.unshift(...posts);
+      state.loadingStatus = 'success'; 
     })
 }
 
 const runPostUpdatingProcess = (state) => {
   const period = 5000;
-  console.log(state)
   const promises = state.feeds.map((feed) => {
     const urlWithProxy = addProxy(feed.url);
     return axios.get(urlWithProxy)
@@ -71,9 +72,11 @@ export default () => {
       feedsContainer: document.querySelector('.feeds'),
       postsContainer: document.querySelector('.posts'),
       modal: document.querySelector('#modal'),
+      submit: document.querySelector('.rss-form button[type="submit"]'),
     }
 
     const initState = {
+      loadingStatus: '', // success/loading/failed
       error: '', // '' or validationError/parseError/required
       isValid: true, // true/false
       feeds: [], // { description, id, title, url }
@@ -104,14 +107,14 @@ export default () => {
 
       urlSchema.validate(url)
         .then(() => {
-          state.isValid = true;
+          state.loadingStatus = 'success'; 
           state.error = '';
           return downloadRss(url, state)
         })
         .catch(err => {
-          console.log('ghhh', err)
           state.error = err.message;
-          state.isValid = false;
+          state.loadingStatus = 'failed'; 
+          // state.isValid = false;
         })
       }
     )
