@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 
-
 import _ from 'lodash';
 import * as yup from 'yup';
 import onChange from 'on-change';
