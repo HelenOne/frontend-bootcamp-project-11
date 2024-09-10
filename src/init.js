@@ -17,7 +17,7 @@ const addProxy = (url) => {
 const downloadRss = (url, state) => {
   state.loadingStatus = 'loading';
   const urlWithProxy = addProxy(url);
-  return axios.get(urlWithProxy)
+  return axios.get(urlWithProxy, { timeout: 10000 })
     .then((response) => {
       const parsedData = parse(response.data.contents);
       const feed = {
@@ -83,7 +83,6 @@ export default () => {
     const initState = {
       loadingStatus: '', // success/loading/failed
       error: '', // '' or validationError/parseError/required
-      isValid: true, // true/false
       feeds: [], // { description, id, title, url }
       posts: [], // { title, description, id, link }
       ui: {
