@@ -34,6 +34,7 @@ const downloadRss = (url, state) => {
 
 const runPostUpdatingProcess = (state) => {
   const period = 5000;
+  console.log(state)
   const promises = state.feeds.map((feed) => {
     const urlWithProxy = addProxy(feed.url);
     return axios.get(urlWithProxy)
@@ -68,15 +69,21 @@ export default () => {
       input: document.querySelector('.rss-form input'),
       feedback: document.querySelector('p.feedback'),
       feedsContainer: document.querySelector('.feeds'),
-      postsContainer: document.querySelector('.posts'),  
+      postsContainer: document.querySelector('.posts'),
+      modal: document.querySelector('#modal'),
     }
 
     const initState = {
-      url: '',
-      error: '',
-      isValid: true,
-      feeds: [],
-      posts: [],
+      error: '', // '' or validationError/parseError/required
+      isValid: true, // true/false
+      feeds: [], // { description, id, title, url }
+      posts: [], // { title, description, id, link }
+      ui: {
+        viewedPosts: new Set(), // Set [1, 342432, 8899]
+      },
+      modal: {
+        postId: null,
+      },
     };
 
     const state = onChange(initState, render(elements, initState, i18n));
@@ -108,6 +115,13 @@ export default () => {
         })
       }
     )
+
+    elements.postsContainer.addEventListener('click', (event) => {
+      const button = event.target.closest('button');
+      const postId = button.dataset.id;
+      state.ui.viewedPosts.add(postId);
+      state.modal.postId = postId;
+    })
 
     runPostUpdatingProcess(state);
   })

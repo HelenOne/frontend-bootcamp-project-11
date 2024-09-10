@@ -82,7 +82,11 @@ const renderPosts = (elements, state, i18next) => {
 
     const a = document.createElement('a');
     a.setAttribute('href', post.link);
-    a.classList.add('fw-normal', 'link-secondary');
+    if (state.ui.viewedPosts.has(post.id)) {
+      a.classList.add('fw-normal', 'link-secondary');
+    } else {
+      a.classList.add('fw-bold');
+    }
     a.dataset.id = post.id;
     a.textContent = post.title;
     a.setAttribute('target', '_blank');
@@ -108,6 +112,16 @@ const renderPosts = (elements, state, i18next) => {
   postsContainer.appendChild(postCardBorder);
 }
 
+const renderModal = (elements, state) => {
+  const post = state.posts.find(({ id }) => id === state.modal.postId);
+  const title = elements.modal.querySelector('.modal-title');
+  const body = elements.modal.querySelector('.modal-body');
+  const readButton = elements.modal.querySelector('.full-article');
+
+  title.textContent = post.title;
+  body.textContent = post.description;
+  readButton.href = post.link;
+};
 
 export default (elements, state, i18next) => (path, value, previousValue) => {
   switch (path) {
@@ -119,6 +133,12 @@ export default (elements, state, i18next) => (path, value, previousValue) => {
       break;
     case 'posts':
       renderPosts(elements, state, i18next);
+      break;
+    case 'ui.viewedPosts':
+      renderPosts(elements, state, i18next);
+      break;
+    case 'modal.postId':
+      renderModal(elements, state);
       break;
     default:
       break;
