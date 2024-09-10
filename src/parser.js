@@ -13,10 +13,10 @@ export default (rssString) => {
 
   const postElements = parsedRSS.querySelectorAll('item');
   const posts = Array.from(postElements).map((postElement) => {
-      const title = postElement.querySelector('title').textContent;
-      const description = postElement.querySelector('description').textContent;
-      const link = postElement.querySelector('link').textContent;
-      return { title, description, link };
+    const title = postElement.querySelector('title').textContent;
+    const description = postElement.querySelector('description').textContent;
+    const link = postElement.querySelector('link').textContent;
+    return { title, description, link };
   });
 
   return ({
@@ -24,4 +24,4 @@ export default (rssString) => {
     feedDescription,
     posts,
   });
-}
+};

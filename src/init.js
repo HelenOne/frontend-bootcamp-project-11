@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import * as yup from 'yup';
 import onChange from 'on-change';
-import render from './view';
 import i18next from 'i18next';
-import resources from './locales/index.js';
 import axios from 'axios';
+import render from './view';
+import resources from './locales/index.js';
 import parse from './parser.js';
 
 const addProxy = (url) => {
@@ -12,10 +12,10 @@ const addProxy = (url) => {
   urlWithProxy.searchParams.set('url', url);
   urlWithProxy.searchParams.set('disableCache', 'true');
   return urlWithProxy.toString();
-}
+};
 
 const downloadRss = (url, state) => {
-  state.loadingStatus = 'loading'; 
+  state.loadingStatus = 'loading';
   const urlWithProxy = addProxy(url);
   return axios.get(urlWithProxy)
     .then((response) => {
@@ -25,20 +25,20 @@ const downloadRss = (url, state) => {
         id: _.uniqueId(),
         title: parsedData.feedTitle,
         description: parsedData.feedDescription,
-      }
+      };
       state.feeds.unshift(feed);
 
       const posts = parsedData.posts.map((post) => ({ ...post, id: _.uniqueId() }));
       state.posts.unshift(...posts);
-      state.loadingStatus = 'success'; 
+      state.loadingStatus = 'success';
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.isAxiosError) {
-        throw new Error('networkError')
+        throw new Error('networkError');
       }
       throw err;
-    })
-}
+    });
+};
 
 const runPostUpdatingProcess = (state) => {
   const period = 5000;
@@ -50,7 +50,7 @@ const runPostUpdatingProcess = (state) => {
         const newPosts = parsedData.posts.map((post) => ({ ...post, feedId: feed.id }));
         const oldPosts = state.posts.filter((post) => post.feedId === feed.id);
 
-        const posts = _.differenceWith(newPosts, oldPosts, (post1, post2) => post1.title === post2.title)
+        const posts = _.differenceWith(newPosts, oldPosts, (p1, p2) => p1.title === p2.title)
           .map((post) => ({ ...post, id: _.uniqueId() }));
         state.posts.unshift(...posts);
       })
@@ -61,7 +61,7 @@ const runPostUpdatingProcess = (state) => {
 
   Promise.all(promises)
     .then(() => setTimeout(() => runPostUpdatingProcess(state), period));
-}
+};
 
 export default () => {
   const i18n = i18next.createInstance();
@@ -70,7 +70,6 @@ export default () => {
     debug: false,
     resources,
   }).then(() => {
-
     const elements = {
       form: document.querySelector('.rss-form'),
       input: document.querySelector('.rss-form input'),
@@ -79,7 +78,7 @@ export default () => {
       postsContainer: document.querySelector('.posts'),
       modal: document.querySelector('#modal'),
       submit: document.querySelector('.rss-form button[type="submit"]'),
-    }
+    };
 
     const initState = {
       loadingStatus: '', // success/loading/failed
@@ -113,24 +112,23 @@ export default () => {
 
       urlSchema.validate(url)
         .then(() => {
-          state.loadingStatus = 'success'; 
+          state.loadingStatus = 'success';
           state.error = '';
-          return downloadRss(url, state)
+          return downloadRss(url, state);
         })
-        .catch(err => {
+        .catch((err) => {
           state.error = err.message;
-          state.loadingStatus = 'failed'; 
-        })
-      }
-    )
+          state.loadingStatus = 'failed';
+        });
+    });
 
     elements.postsContainer.addEventListener('click', (event) => {
       const button = event.target.closest('button');
       const postId = button.dataset.id;
       state.ui.viewedPosts.add(postId);
       state.modal.postId = postId;
-    })
+    });
 
     runPostUpdatingProcess(state);
-  })
-}
+  });
+};

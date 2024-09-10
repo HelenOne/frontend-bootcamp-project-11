@@ -1,6 +1,5 @@
-const renderFeedback = (elements, state, i18next, value) => {
+const renderFeedback = (elements, state, i18next) => {
   const { feedback, input, submit } = elements;
-  console.log(state)
 
   switch (state.loadingStatus) {
     case 'success':
@@ -22,34 +21,37 @@ const renderFeedback = (elements, state, i18next, value) => {
       submit.disabled = false;
       input.removeAttribute('readonly');
       const errorMessage = state.error;
+      // eslint-disable no-case-declarations
       feedback.textContent = i18next.t(`errors.${errorMessage}`);
       feedback.classList.add('text-danger');
       feedback.classList.remove('text-success');
       break;
+    default:
+      break;
   }
-}
+};
 
 const renderFeeds = (elements, state, i18next) => {
   const { feeds } = state;
   const { feedsContainer } = elements;
 
-  const feedElements = feeds.map(feed => {
+  const feedElements = feeds.map((feed) => {
     const { title, description, id } = feed;
     const feedItem = document.createElement('li');
     feedItem.classList.add('list-group-item', 'border-0', 'border-end-0');
     feedItem.dataset.id = id;
-  
+
     const titleEl = document.createElement('h3');
     titleEl.classList.add('h6', 'm-0');
     titleEl.textContent = title;
-  
+
     const descriptionEl = document.createElement('p');
     descriptionEl.classList.add('m-0', 'small', 'text-black-50');
     descriptionEl.textContent = description;
-  
+
     feedItem.appendChild(titleEl);
     feedItem.appendChild(descriptionEl);
-  
+
     return feedItem;
   });
 
@@ -74,7 +76,7 @@ const renderFeeds = (elements, state, i18next) => {
   feedCardBorder.appendChild(feedsList);
   feedsContainer.innerHTML = '';
   feedsContainer.appendChild(feedCardBorder);
-}
+};
 
 const renderPosts = (elements, state, i18next) => {
   const { posts } = state;
@@ -95,7 +97,7 @@ const renderPosts = (elements, state, i18next) => {
   const postsList = document.createElement('ul');
   postsList.classList.add('list-group', 'border-0', 'rounded-0');
 
-  const postElements = posts.map(post => {
+  const postElements = posts.map((post) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
@@ -123,13 +125,13 @@ const renderPosts = (elements, state, i18next) => {
 
     li.appendChild(button);
     return li;
-  })
+  });
 
   postsList.append(...postElements);
   postCardBorder.appendChild(postsList);
   postsContainer.innerHTML = '';
   postsContainer.appendChild(postCardBorder);
-}
+};
 
 const renderModal = (elements, state) => {
   const post = state.posts.find(({ id }) => id === state.modal.postId);
@@ -142,7 +144,7 @@ const renderModal = (elements, state) => {
   readButton.href = post.link;
 };
 
-export default (elements, state, i18next) => (path, value, previousValue) => {
+export default (elements, state, i18next) => (path, value) => {
   switch (path) {
     case 'loadingStatus':
       renderFeedback(elements, state, i18next, value);
@@ -162,4 +164,4 @@ export default (elements, state, i18next) => (path, value, previousValue) => {
     default:
       break;
   }
-}
+};
