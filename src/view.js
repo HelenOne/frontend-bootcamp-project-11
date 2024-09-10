@@ -1,7 +1,7 @@
 const renderFeedback = (elements, state, i18next) => {
-  const { feedback, input, submit } = elements;
+  const { feedback, input, submit, form } = elements;
 
-  switch (state.loadingStatus) {
+  switch (state.loading.status) {
     case 'success':
       submit.disabled = false;
       input.removeAttribute('readonly');
@@ -9,6 +9,7 @@ const renderFeedback = (elements, state, i18next) => {
       input.classList.remove('is-invalid');
       feedback.classList.remove('text-danger');
       feedback.classList.add('text-success');
+      form.reset();
       input.focus();
       break;
     case 'loading':
@@ -23,7 +24,9 @@ const renderFeedback = (elements, state, i18next) => {
       submit.disabled = false;
       input.removeAttribute('readonly');
       input.classList.add('is-invalid');
-      const errorMessage = state.error;
+      const errorMessage = state.loading.error;
+      console.log(errorMessage)
+
       feedback.textContent = i18next.t(`errors.${errorMessage}`);
       feedback.classList.add('text-danger');
       feedback.classList.remove('text-success');
@@ -146,9 +149,23 @@ const renderModal = (elements, state) => {
   readButton.href = post.link;
 };
 
+const renderForm = (elements, state, i18next) => {
+  const { form: { isValid, error } } = state;
+  const { input, feedback } = elements;
+  if (isValid) {
+    input.classList.remove('is-invalid');
+    feedback.classList.remove('text-danger');
+    feedback.textContent = i18next.t('loading.success');
+  } else {
+    input.classList.add('is-invalid');
+    feedback.classList.add('text-danger');
+    feedback.textContent = i18next.t([`errors.${error}`]);
+  }
+}
+
 export default (elements, state, i18next) => (path, value) => {
   switch (path) {
-    case 'loadingStatus':
+    case 'loading.status':
       renderFeedback(elements, state, i18next, value);
       break;
     case 'feeds':
@@ -162,6 +179,9 @@ export default (elements, state, i18next) => (path, value) => {
       break;
     case 'modal.postId':
       renderModal(elements, state);
+      break;
+    case 'form.isValid':
+      renderForm(elements, state, i18next);
       break;
     default:
       break;

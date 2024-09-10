@@ -15,7 +15,8 @@ const addProxy = (url) => {
 };
 
 const downloadRss = (url, state) => {
-  state.loadingStatus = 'loading';
+  console.log('start load rss')
+  state.loading.status = 'loading';
   const urlWithProxy = addProxy(url);
   return axios.get(urlWithProxy, { timeout: 10000 })
     .then((response) => {
@@ -30,13 +31,17 @@ const downloadRss = (url, state) => {
 
       const posts = parsedData.posts.map((post) => ({ ...post, id: _.uniqueId() }));
       state.posts.unshift(...posts);
-      state.loadingStatus = 'success';
+      console.log('success rss loaded')
+
+      state.loading.status = 'success';
     })
     .catch((err) => {
       if (err.isAxiosError) {
-        throw new Error('networkError');
+        state.loading.error = 'networkError';
+      } else {
+        state.loading.error = err.message;
       }
-      throw err;
+      state.loading.status = 'failed';
     });
 };
 
@@ -81,8 +86,14 @@ export default () => {
     };
 
     const initState = {
-      loadingStatus: '', // success/loading/failed
-      error: '', // '' or validationError/parseError/required
+      form: {
+        error: '', // '' or validationError/required/notOneOf
+        isValid: true, // true/false
+      },
+      loading: {
+        status: '', // success/loading/failed
+        error: '', // '' or networkError/parseError  
+      },
       feeds: [], // { description, id, title, url }
       posts: [], // { title, description, id, link }
       ui: {
@@ -118,13 +129,13 @@ export default () => {
 
       validateUrl(url)
         .then(() => {
-          state.loadingStatus = 'success';
-          state.error = '';
+          state.form.error = '';
+          state.form.isValid = true;
           return downloadRss(url, state);
         })
         .catch((err) => {
-          state.error = err.message;
-          state.loadingStatus = 'failed';
+          state.form.error = err.message;
+          state.form.isValid = false;
         });
     });
 
