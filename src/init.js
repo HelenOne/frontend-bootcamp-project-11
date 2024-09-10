@@ -15,7 +15,7 @@ const addProxy = (url) => {
 };
 
 const downloadRss = (url, state) => {
-  console.log('start load rss')
+  console.log('start load rss');
   state.loading.status = 'loading';
   const urlWithProxy = addProxy(url);
   return axios.get(urlWithProxy, { timeout: 10000 })
@@ -31,7 +31,7 @@ const downloadRss = (url, state) => {
 
       const posts = parsedData.posts.map((post) => ({ ...post, id: _.uniqueId() }));
       state.posts.unshift(...posts);
-      console.log('success rss loaded')
+      console.log('success rss loaded');
 
       state.loading.status = 'success';
     })
@@ -92,7 +92,7 @@ export default () => {
       },
       loading: {
         status: '', // success/loading/failed
-        error: '', // '' or networkError/parseError  
+        error: '', // '' or networkError/parseError
       },
       feeds: [], // { description, id, title, url }
       posts: [], // { title, description, id, link }
@@ -120,7 +120,7 @@ export default () => {
       const links = state.feeds.map((feed) => feed.url);
       const urlSchema = yup.string().url().required().notOneOf(links);
       return urlSchema.validate(url);
-    }
+    };
 
     elements.form.addEventListener('submit', (e) => {
       e.preventDefault();

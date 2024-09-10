@@ -1,5 +1,7 @@
 const renderFeedback = (elements, state, i18next) => {
-  const { feedback, input, submit, form } = elements;
+  const {
+    feedback, input, submit, form,
+  } = elements;
 
   switch (state.loading.status) {
     case 'success':
@@ -25,7 +27,7 @@ const renderFeedback = (elements, state, i18next) => {
       input.removeAttribute('readonly');
       input.classList.add('is-invalid');
       const errorMessage = state.loading.error;
-      console.log(errorMessage)
+      console.log(errorMessage);
 
       feedback.textContent = i18next.t(`errors.${errorMessage}`);
       feedback.classList.add('text-danger');
@@ -161,7 +163,7 @@ const renderForm = (elements, state, i18next) => {
     feedback.classList.add('text-danger');
     feedback.textContent = i18next.t([`errors.${error}`]);
   }
-}
+};
 
 export default (elements, state, i18next) => (path, value) => {
   switch (path) {
